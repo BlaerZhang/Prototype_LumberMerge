@@ -141,24 +141,27 @@ public class ResourceConverter : MonoBehaviour
             AudioManager.instance.PlaySound(soundFX[Random.Range(0, soundFX.Count)]);
             if (particles != null)
             {
-                switch (level)
-                {
-                    case 1:
-                        particles.emission.SetBurst(0, new ParticleSystem.Burst(0.0f, 10));
-                        break;
-                    case 2:
-                        particles.emission.SetBurst(0, new ParticleSystem.Burst(0.0f, 20));
-                        break;
-                    case 3:
-                        particles.emission.SetBurst(0, new ParticleSystem.Burst(0.0f, 30));
-                        break;
-                    case 4:
-                        particles.emission.SetBurst(0, new ParticleSystem.Burst(0.0f, 40));
-                        break;
-                }
                 ParticleSystem particleInstance = Instantiate(particles, transform.Find("ParticleEmittingPos").position, Quaternion.identity);
                 ParticleSystem.MainModule particleMain = particleInstance.main;
                 particleMain.startColor = resourceProducedColor;
+                switch (level)
+                {
+                    case 1:
+                        particleInstance.emission.SetBurst(0, new ParticleSystem.Burst(0.0f, 1));
+                        break;
+                    case 2:
+                        particleInstance.emission.SetBurst(0, new ParticleSystem.Burst(0.0f, 10));
+                        break;
+                    case 3:
+                        particleInstance.emission.SetBurst(0, new ParticleSystem.Burst(0.0f, 30));
+                        break;
+                    case 4:
+                        particleInstance.emission.SetBurst(0, new ParticleSystem.Burst(0.0f, 50));
+                        break;
+                    default:
+                        particleInstance.emission.SetBurst(0, new ParticleSystem.Burst(0.0f, 50));
+                        break;
+                }
             }
             if (shake)
                 transform.DOShakePosition(0.1f, Vector3.one * 0.07f, 300).OnComplete((() =>
@@ -196,7 +199,9 @@ public class ResourceConverter : MonoBehaviour
     
     private void PlayFeedbackAnimation()
     {
-        GameObject feedback = Instantiate(textFeedback, transform.position + new Vector3(Random.Range(-0.1f,0.1f),0,0), Quaternion.identity);
+        Vector3 targetPos = transform.Find("ParticleEmittingPos").position + new Vector3(Random.Range(-0.1f, 0.1f),1,0);
+
+        GameObject feedback = Instantiate(textFeedback, targetPos, Quaternion.identity);
         TextMeshPro feedbackText = feedback.GetComponentInChildren<TextMeshPro>();
         feedbackText.color = resourceProducedColor;
         Sequence feedbackSequence = DOTween.Sequence();
@@ -206,7 +211,7 @@ public class ResourceConverter : MonoBehaviour
         feedbackSequence
             .Append(feedbackText.transform.DOScale(Vector3.zero, 0))
             .Append(feedbackText.transform.DOScale(Vector3.one, 0.5f))
-            .Insert(0, feedbackText.transform.DOMoveY(transform.position.y + 1, 2f))
+            .Insert(0, feedbackText.transform.DOMoveY(targetPos.y + 1, 2f))
             .Insert(1, feedbackText.DOFade(0, 1f))
             .OnComplete((() => { Destroy(feedback); }));
         feedbackSequence.Play();
