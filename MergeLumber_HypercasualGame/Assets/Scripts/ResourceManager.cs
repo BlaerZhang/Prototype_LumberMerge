@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ResourceManager : MonoBehaviour
 {
@@ -54,7 +55,7 @@ public class ResourceManager : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P)) SwitchLoop();
+        if(Input.GetKeyDown(KeyCode.R)) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         
         wood = resourceDict[Resources.Wood];
         stone = resourceDict[Resources.Stone];
@@ -73,8 +74,8 @@ public class ResourceManager : MonoBehaviour
         //temp
         startingConverter.free = true;
         startingConverter.GetComponent<SpriteRenderer>().sprite = rock;
-        startingConverter.transform.Find("conveyor").gameObject.SetActive(false);
-        startingConverter.transform.Find("conveyor (1)").gameObject.SetActive(false);
+        startingConverter.transform.Find("conveyer").gameObject.SetActive(false);
+        startingConverter.transform.Find("conveyer (1)").gameObject.SetActive(false);
         startingConverter.transform.Find("Instruction").GetChild(0).gameObject.SetActive(false);
         
         tree.enabled = false;
