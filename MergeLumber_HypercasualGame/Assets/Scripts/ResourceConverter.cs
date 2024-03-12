@@ -18,6 +18,7 @@ public class ResourceConverter : MonoBehaviour
     public int clicksToUpgrade = 50;
 
     public ResourceManager.Resources resourceProduce;
+    public Color resourceProducedColor;
     public int initialProduceAmount;
     private long currentProduceAmount;
     
@@ -57,6 +58,9 @@ public class ResourceConverter : MonoBehaviour
     {
         originalPos = transform.localPosition;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        resourceText.color = resourceProducedColor;
+        productionSpeedText.color = resourceProducedColor;
+        upgradePriceText.color = resourceProducedColor;
     }
     
     void Update()
@@ -152,7 +156,9 @@ public class ResourceConverter : MonoBehaviour
                         particles.emission.SetBurst(0, new ParticleSystem.Burst(0.0f, 40));
                         break;
                 }
-                Instantiate(particles, transform.position, Quaternion.identity);
+                ParticleSystem particleInstance = Instantiate(particles, transform.Find("ParticleEmittingPos").position, Quaternion.identity);
+                ParticleSystem.MainModule particleMain = particleInstance.main;
+                particleMain.startColor = resourceProducedColor;
             }
             if (shake)
                 transform.DOShakePosition(0.1f, Vector3.one * 0.07f, 300).OnComplete((() =>
@@ -192,7 +198,7 @@ public class ResourceConverter : MonoBehaviour
     {
         GameObject feedback = Instantiate(textFeedback, transform.position + new Vector3(Random.Range(-0.1f,0.1f),0,0), Quaternion.identity);
         TextMeshPro feedbackText = feedback.GetComponentInChildren<TextMeshPro>();
-        feedbackText.color = resourceText.color;
+        feedbackText.color = resourceProducedColor;
         Sequence feedbackSequence = DOTween.Sequence();
         
         feedbackText.text = $"+ {currentProduceAmount}";

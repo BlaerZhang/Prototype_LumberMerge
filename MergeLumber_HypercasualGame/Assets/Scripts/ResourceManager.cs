@@ -20,6 +20,8 @@ public class ResourceManager : MonoBehaviour
     public ResourceConverter startingConverter;
     public ResourceConverter endingConverter;
     public AudioClip treeFall;
+    public Sprite treeTrunk;
+    public Sprite rock;
     private bool isLooped = false;
 
     public enum Resources
@@ -52,6 +54,8 @@ public class ResourceManager : MonoBehaviour
 
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.P)) SwitchLoop();
+        
         wood = resourceDict[Resources.Wood];
         stone = resourceDict[Resources.Stone];
         iron = resourceDict[Resources.Iron];
@@ -68,7 +72,14 @@ public class ResourceManager : MonoBehaviour
         
         //temp
         startingConverter.free = true;
-        tree.gameObject.SetActive(false);
+        startingConverter.GetComponent<SpriteRenderer>().sprite = rock;
+        startingConverter.transform.Find("conveyor").gameObject.SetActive(false);
+        startingConverter.transform.Find("conveyor (1)").gameObject.SetActive(false);
+        startingConverter.transform.Find("Instruction").GetChild(0).gameObject.SetActive(false);
+        
+        tree.enabled = false;
+        tree.GetComponent<SpriteRenderer>().sprite = treeTrunk;
+        
         AudioManager.instance.PlaySound(treeFall);
         isLooped = true;
         //temp
