@@ -34,9 +34,4 @@ public class ParticleToTarget : MonoBehaviour
 
         particle.SetParticles(particles, count);
     }
-
-    void ParticleToTargetUpdate()
-    {
-        
-    }
 }
